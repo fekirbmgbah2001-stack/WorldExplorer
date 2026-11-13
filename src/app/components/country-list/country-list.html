@@ -1,0 +1,186 @@
+
+<nav class="navbar">
+
+  <a href="#accueil" class="logo">
+    🌍 WorldExplorer
+  </a>
+
+  <div class="nav-links">
+    <a href="#accueil">Accueil</a>
+    <a href="#pays">Les pays</a>
+    <a href="#apropos">À propos</a>
+  </div>
+
+</nav>
+
+
+<div class="container" id="accueil">
+
+  <header class="header">
+    <h1>🌍 Explorateur des pays du monde</h1>
+
+    <p>
+      Découvrez les pays et leurs informations à travers le monde.
+    </p>
+  </header>
+
+  @if (loading) {
+    <p class="message">Chargement des pays...</p>
+  }
+
+  @if (errorMessage) {
+    <p class="error">{{ errorMessage }}</p>
+  }
+
+  @if (!loading && !errorMessage) {
+
+    
+<div class="toolbar">
+
+  <div class="search-box">
+
+    <input
+      type="text"
+      placeholder="🔍 Rechercher un pays..."
+      [value]="searchTerm"
+      (input)="searchTerm = $any($event.target).value"
+    >
+
+  </div>
+
+  <div class="filter-box">
+
+    <label for="region">Filtrer par continent :</label>
+
+    <select
+      id="region"
+      [value]="selectedRegion"
+      (change)="selectedRegion = $any($event.target).value"
+    >
+
+      @for (region of regions; track region) {
+
+        <option [value]="region">
+          {{ region === 'Tous' ? 'Tous les continents' :
+             region === 'Africa' ? 'Afrique' :
+             region === 'Americas' ? 'Amériques' :
+             region === 'Asia' ? 'Asie' :
+             region === 'Europe' ? 'Europe' : 'Océanie' }}
+        </option>
+
+      }
+
+    </select>
+
+  </div>
+
+</div>
+
+<div class="statistics">
+
+  <div class="stat-card">
+    <span>🌍</span>
+    <div>
+      <h3>{{ countries.length }}</h3>
+      <p>Pays disponibles</p>
+    </div>
+  </div>
+
+  <div class="stat-card">
+    <span>🔎</span>
+    <div>
+      <h3>{{ filteredCountries.length }}</h3>
+      <p>Résultats affichés</p>
+    </div>
+  </div>
+
+</div>
+
+
+    <h2 id="pays">
+      Liste des pays ({{ filteredCountries.length }})
+    </h2>
+
+    @if (filteredCountries.length === 0) {
+
+      <p class="message">
+        Aucun pays ne correspond à votre recherche.
+      </p>
+
+    } @else {
+
+      <div class="countries-grid">
+
+        @for (country of filteredCountries; track country.names.common) {
+
+          <button
+            type="button"
+            class="country-card"
+            (click)="selectCountry(country)"
+          >
+
+            <img
+              [src]="country.flag.url_svg || country.flag.url_png"
+              [alt]="country.names.common"
+            >
+
+            <div class="country-info">
+
+              <h3>{{ country.names.common }}</h3>
+
+              <p>
+                <strong>Population :</strong>
+                {{ country.population.toLocaleString('fr-FR') }}
+              </p>
+
+              <p>
+                <strong>Région :</strong>
+                {{ country.region }}
+              </p>
+
+              <span class="details-link">
+                Voir les détails →
+              </span>
+
+            </div>
+
+          </button>
+
+        }
+
+      </div>
+
+    }
+
+  }
+
+</div>
+
+<footer class="footer" id="apropos">
+
+  <h2>🌍 WorldExplorer</h2>
+
+  <p>
+    Explorez le monde, découvrez les pays
+    et apprenez-en davantage sur notre planète.
+  </p>
+
+  <div class="footer-links">
+    <a href="#accueil">Accueil</a>
+    <a href="#pays">Explorer les pays</a>
+  </div>
+
+  <p class="copyright">
+    © 2026 WorldExplorer - Tous droits réservés.
+  </p>
+
+</footer>
+
+@if (selectedCountry) {
+
+  <app-country-detail
+    [country]="selectedCountry"
+    (close)="closeDetails()"
+  />
+
+}

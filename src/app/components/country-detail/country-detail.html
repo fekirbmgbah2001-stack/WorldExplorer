@@ -1,0 +1,123 @@
+
+@if (country) {
+
+  <div class="detail-overlay">
+
+    <div class="detail-container">
+
+      <button
+        class="close-button"
+        type="button"
+        (click)="close.emit()"
+      >
+        ✕ Fermer
+      </button>
+
+      <h1>{{ country.names.common }}</h1>
+
+      <img
+        class="detail-flag"
+        [src]="country.flag.url_svg || country.flag.url_png"
+        [alt]="country.names.common"
+      >
+
+      <h2>Informations générales</h2>
+
+      <div class="detail-grid">
+
+        <div class="detail-item">
+          <strong>Nom officiel</strong>
+          <p>{{ country.names.official }}</p>
+        </div>
+
+        <div class="detail-item">
+          <strong>Capitale</strong>
+          <p>
+            {{ country.capitals?.[0]?.name || 'Non renseignée' }}
+          </p>
+        </div>
+
+        <div class="detail-item">
+          <strong>Population</strong>
+          <p>{{ country.population.toLocaleString('fr-FR') }}</p>
+        </div>
+
+        <div class="detail-item">
+          <strong>Superficie</strong>
+          <p>
+            {{ country.area?.kilometers?.toLocaleString('fr-FR') || 'Non renseignée' }}
+            km²
+          </p>
+        </div>
+
+        <div class="detail-item">
+          <strong>Continent / Région</strong>
+          <p>{{ country.region }}</p>
+        </div>
+
+        <div class="detail-item">
+          <strong>Sous-région</strong>
+          <p>{{ country.subregion || 'Non renseignée' }}</p>
+        </div>
+
+        <div class="detail-item">
+          <strong>Latitude</strong>
+          <p>{{ country.coordinates?.lat ?? 'Non renseignée' }}</p>
+        </div>
+
+        <div class="detail-item">
+          <strong>Longitude</strong>
+          <p>{{ country.coordinates?.lng ?? 'Non renseignée' }}</p>
+        </div>
+
+      </div>
+
+      <h2>Localisation géographique</h2>
+
+      @if (
+  country.coordinates?.lat !== null &&
+  country.coordinates?.lat !== undefined &&
+  country.coordinates?.lng !== null &&
+  country.coordinates?.lng !== undefined
+) {
+
+  <div class="map-information">
+    <p>
+      <strong>Latitude :</strong>
+      {{ country.coordinates.lat }}
+    </p>
+
+    <p>
+      <strong>Longitude :</strong>
+      {{ country.coordinates.lng }}
+    </p>
+  </div>
+
+  <div #mapContainer class="country-map"></div>
+
+} @else {
+
+  <p>
+    Les coordonnées géographiques de ce pays ne sont pas disponibles.
+  </p>
+
+}
+
+@if (country.links?.google_maps) {
+
+  <a
+    class="map-button"
+    [href]="country.links.google_maps"
+    target="_blank"
+    rel="noopener noreferrer"
+  >
+    📍 Ouvrir dans Google Maps
+  </a>
+
+}
+
+    </div>
+
+  </div>
+
+}
