@@ -1,5 +1,5 @@
 
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable, EMPTY } from 'rxjs';
 import { expand, reduce } from 'rxjs/operators';
@@ -33,7 +33,7 @@ export class CountryService {
     Authorization: `Bearer ${this.apiKey}`
   });
 
-  constructor(private http: HttpClient) {}
+  private http = inject(HttpClient);
 
   getCountries(): Observable<Country[]> {
 

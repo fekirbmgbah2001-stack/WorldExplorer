@@ -2,9 +2,11 @@
 import {
   Component,
   OnInit,
-  ChangeDetectorRef
+  ChangeDetectorRef,
+  inject
 } from '@angular/core';
 
+import { HttpErrorResponse } from '@angular/common/http';
 import { CountryService } from '../../services/country';
 import { Country } from '../../models/country';
 import { CountryDetailComponent } from '../country-detail/country-detail';
@@ -39,10 +41,9 @@ regions: string[] = [
 
   selectedCountry: Country | null = null;
 
-  constructor(
-    private countryService: CountryService,
-    private cdr: ChangeDetectorRef
-  ) {}
+ private countryService = inject(CountryService);
+
+private cdr = inject(ChangeDetectorRef);
 
   ngOnInit(): void {
 
@@ -57,7 +58,7 @@ regions: string[] = [
 
       },
 
-      error: (error: any) => {
+      error: (error: HttpErrorResponse) => {
 
         console.error('Erreur API :', error);
 

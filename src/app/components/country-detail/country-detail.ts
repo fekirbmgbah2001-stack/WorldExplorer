@@ -25,7 +25,7 @@ export class CountryDetailComponent implements AfterViewInit, OnDestroy {
 
   @Input() country!: Country;
 
-  @Output() close = new EventEmitter<void>();
+  @Output() closed = new EventEmitter<void>();
 
   @ViewChild('mapContainer')
   mapContainer!: ElementRef<HTMLDivElement>;

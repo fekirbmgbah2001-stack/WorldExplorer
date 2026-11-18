@@ -30,7 +30,8 @@ export interface Country {
 
   subregion?: string;
 
-  coordinates: {
+  coordinates?
+  : {
     lat: number;
     lng: number;
   };
@@ -39,4 +40,21 @@ export interface Country {
     google_maps?: string;
     open_street_maps?: string;
   };
+
+  // Nouvelles informations
+
+  languages?: {
+    name: string;
+    native_name?: string;
+  }[];
+
+  currencies?: {
+    code: string;
+    name: string;
+    symbol?: string;
+  }[];
+
+  borders?: string[];
+
+  calling_codes?: string[];
 }

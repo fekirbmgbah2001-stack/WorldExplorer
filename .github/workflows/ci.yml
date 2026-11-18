@@ -1,0 +1,71 @@
+
+name: CI - WorldExplorer
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+permissions:
+  contents: read
+
+jobs:
+  quality-gate:
+    name: Tests, lint et build
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Récupérer le code
+        uses: actions/checkout@v4
+
+      - name: Installer Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Installer les dépendances
+        run: npm ci
+
+      - name: Exécuter les tests
+        id: tests
+        run: npm test -- --watch=false
+
+      - name: Vérifier la qualité du code
+        id: lint
+        run: npx ng lint
+
+      - name: Compiler le projet
+        id: build
+        run: npm run build
+
+      - name: Générer le journal du pipeline
+        if: always()
+        shell: bash
+        run: |
+          mkdir -p ci-logs
+          {
+            echo "Projet : WorldExplorer"
+            echo "Workflow : $GITHUB_WORKFLOW"
+            echo "Run ID : $GITHUB_RUN_ID"
+            echo "Événement : $GITHUB_EVENT_NAME"
+            echo "Branche : $GITHUB_REF_NAME"
+            echo "Commit : $GITHUB_SHA"
+            echo "Auteur : $GITHUB_ACTOR"
+            echo "Tests : ${{ steps.tests.outcome }}"
+            echo "ESLint : ${{ steps.lint.outcome }}"
+            echo "Build : ${{ steps.build.outcome }}"
+            echo "Statut global : ${{ job.status }}"
+            echo "Date UTC : $(date -u)"
+          } > ci-logs/pipeline-log.txt
+
+      - name: Archiver le journal du pipeline
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: worldexplorer-ci-log
+          path: ci-logs/pipeline-log.txt
+          retention-days: 30
